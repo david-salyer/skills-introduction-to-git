@@ -18,6 +18,8 @@ const COLORS = {
 };
 
 // Tetromino shapes (simplified for easier pattern matching)
+<h3>Level</h3>
+<div class="score" id="level">1</div>
 const SHAPES = [
   [[1]], // Single block
   [[2, 2]], // Horizontal pair
