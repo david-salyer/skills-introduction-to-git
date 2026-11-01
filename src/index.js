@@ -18,6 +18,8 @@ const COLORS = {
 };
 
 // Tetromino shapes (simplified for easier pattern matching)
+<h3>Level</h3>
+<div class="score" id="level">1</div>
 const SHAPES = [
   [[1]], // Single block
   [[2, 2]], // Horizontal pair
@@ -37,7 +39,10 @@ let board = [];
 let currentPiece = null;
 let currentX = 0;
 let currentY = 0;
+let level = 1;
+let patternsCleared = 0;
 let score = 0;
+let highScore = 0;
 let gameOver = false;
 let isPaused = false;
 let dropCounter = 0;
@@ -56,6 +61,10 @@ function init() {
   board = Array(ROWS)
     .fill(null)
     .map(() => Array(COLS).fill(0));
+
+  // Load high score from localStorage
+  highScore = parseInt(localStorage.getItem("stackOverflownHighScore")) || 0;
+  document.getElementById("high-score").textContent = highScore;
 
   // Set initial target pattern
   setNewTargetPattern();
@@ -262,13 +271,18 @@ function drawTargetPattern() {
   }
 }
 
-// Check for pattern match
 function checkPatternMatch() {
   for (let startRow = 0; startRow <= ROWS - PATTERN_SIZE; startRow++) {
     for (let startCol = 0; startCol <= COLS - PATTERN_SIZE; startCol++) {
       if (matchesPattern(startRow, startCol)) {
         clearPattern(startRow, startCol);
         score += 100;
+        patternsCleared++;
+        if (patternsCleared % 5 === 0) {
+          level++;
+          dropInterval = Math.max(200, 1000 - (level - 1) * 100);
+          document.getElementById("level").textContent = level;
+        }
         updateScore();
         setNewTargetPattern();
         return;
@@ -307,6 +321,13 @@ function clearPattern(startRow, startCol) {
 // Update score display
 function updateScore() {
   document.getElementById("score").textContent = score;
+
+  // Update high score if current score exceeds it
+  if (score > highScore) {
+    highScore = score;
+    document.getElementById("high-score").textContent = highScore;
+    localStorage.setItem("stackOverflownHighScore", highScore);
+  }
 }
 
 // Handle keyboard input
