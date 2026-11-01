@@ -4,6 +4,7 @@ Organize the falling blocks into the current debug pattern before the stack over
 
 ## How to Develop
 
+Ready for step 6
 - `index.html` - the game container for playing
 - `index.js` - the primary game logic
 - `patterns.js` - the error patterns to match during gameplay
